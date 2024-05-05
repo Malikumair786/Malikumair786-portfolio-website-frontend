@@ -1,4 +1,100 @@
-import React, { useReducer, useEffect } from "react";
+// import React, { useReducer, useEffect } from "react";
+// import axios from "axios";
+// import { useSelector } from "react-redux";
+
+// const initialState = {
+//   name: "",
+//   phone: "",
+//   age: "",
+//   gender: "",
+//   email: "",
+//   country: "",
+//   greetings: "",
+//   shortTitles: "",
+//   description: "",
+//   aboutMe: "",
+//   technologies: "",
+// };
+
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case "SET_FIELD":
+//       return { ...state, [action.field]: action.value };
+//     default:
+//       return state;
+//   }
+// };
+
+// const AdminMain = () => {
+//   const { portfolioData } = useSelector((state) => state.root);
+//   const intro =
+//     portfolioData && portfolioData.length > 0 ? portfolioData[0] : null;
+
+//   const [state, dispatch] = useReducer(reducer, initialState);
+
+//   useEffect(() => {
+//     if (intro) {
+//       dispatch({ type: "SET_FIELD", field: "name", value: intro.name || "" });
+//       dispatch({ type: "SET_FIELD", field: "phone", value: intro.phone || "" });
+//       dispatch({ type: "SET_FIELD", field: "age", value: intro.age || "" });
+//       dispatch({
+//         type: "SET_FIELD",
+//         field: "gender",
+//         value: intro.gender || "",
+//       });
+//       dispatch({ type: "SET_FIELD", field: "email", value: intro.email || "" });
+//       dispatch({
+//         type: "SET_FIELD",
+//         field: "country",
+//         value: intro.country || "",
+//       });
+//       dispatch({
+//         type: "SET_FIELD",
+//         field: "greetings",
+//         value: intro.greetings || "",
+//       });
+//       dispatch({
+//         type: "SET_FIELD",
+//         field: "shortTitles",
+//         value: intro.shortTitles || "",
+//       });
+//       dispatch({
+//         type: "SET_FIELD",
+//         field: "description",
+//         value: intro.description || "",
+//       });
+//       dispatch({
+//         type: "SET_FIELD",
+//         field: "aboutMe",
+//         value: intro.aboutMe || "",
+//       });
+//       dispatch({
+//         type: "SET_FIELD",
+//         field: "technologies",
+//         value: intro.technologies || "",
+//       });
+//     }
+//   }, [intro]);
+
+//   const submitHandler = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const admin = await axios.put(
+//         `${process.env.REACT_APP_API_URL}/admin/65fc71b4d6a14af77159169b`,
+//         state
+//       );
+//       console.log(admin.data);
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     dispatch({ type: "SET_FIELD", field: name, value });
+//   };
+
+import React, { useReducer, useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -27,69 +123,57 @@ const reducer = (state, action) => {
 
 const AdminMain = () => {
   const { portfolioData } = useSelector((state) => state.root);
-  const intro =
-    portfolioData && portfolioData.length > 0 ? portfolioData[0] : null;
-
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (intro) {
-      dispatch({ type: "SET_FIELD", field: "name", value: intro.name || "" });
-      dispatch({ type: "SET_FIELD", field: "phone", value: intro.phone || "" });
-      dispatch({ type: "SET_FIELD", field: "age", value: intro.age || "" });
-      dispatch({
-        type: "SET_FIELD",
-        field: "gender",
-        value: intro.gender || "",
-      });
-      dispatch({ type: "SET_FIELD", field: "email", value: intro.email || "" });
-      dispatch({
-        type: "SET_FIELD",
-        field: "country",
-        value: intro.country || "",
-      });
-      dispatch({
-        type: "SET_FIELD",
-        field: "greetings",
-        value: intro.greetings || "",
-      });
-      dispatch({
-        type: "SET_FIELD",
-        field: "shortTitles",
-        value: intro.shortTitles || "",
-      });
-      dispatch({
-        type: "SET_FIELD",
-        field: "description",
-        value: intro.description || "",
-      });
-      dispatch({
-        type: "SET_FIELD",
-        field: "aboutMe",
-        value: intro.aboutMe || "",
-      });
-      dispatch({
-        type: "SET_FIELD",
-        field: "technologies",
-        value: intro.technologies || "",
-      });
-    }
-  }, [intro]);
+    const fetchData = async () => {
+      if (!portfolioData || portfolioData.length === 0) {
+        try {
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/admin`
+          );
+          // Assume response.data is the array of portfolio items
+          updateFormData(response.data[0]);
+        } catch (error) {
+          console.error("Error fetching portfolio data:", error);
+        }
+      } else {
+        updateFormData(portfolioData[0]);
+      }
+    };
+
+    fetchData();
+  }, [portfolioData]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const admin = await axios.put(`/admin/65fc71b4d6a14af77159169b`, state);
+      const admin = await axios.put(
+        `${process.env.REACT_APP_API_URL}/admin/65fc71b4d6a14af77159169b`,
+        state
+      );
       console.log(admin.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const updateFormData = (data) => {
+    Object.keys(state).forEach((key) => {
+      dispatch({ type: "SET_FIELD", field: key, value: data[key] || "" });
+    });
+    setIsLoading(false);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch({ type: "SET_FIELD", field: name, value });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <form onSubmit={submitHandler}>

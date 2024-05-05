@@ -94,9 +94,9 @@ const Admin = () => {
             role="tabpanel"
             aria-labelledby="profile-tab"
           >
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               <AdminMain />
-            </p>
+            </div>
           </div>
           <div
             className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${
@@ -106,9 +106,9 @@ const Admin = () => {
             role="tabpanel"
             aria-labelledby="dashboard-tab"
           >
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               <AdminExperience />
-            </p>
+            </div>
           </div>
           <div
             className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${
@@ -118,9 +118,9 @@ const Admin = () => {
             role="tabpanel"
             aria-labelledby="settings-tab"
           >
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               <AdminProjects />
-            </p>
+            </div>
           </div>
           <div
             className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${
@@ -130,9 +130,9 @@ const Admin = () => {
             role="tabpanel"
             aria-labelledby="contacts-tab"
           >
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               <AdminCourses />
-            </p>
+            </div>
           </div>
         </div>
       </div>
